@@ -15,7 +15,6 @@
     PB.collection('posts').subscribe('*', async (e) => {
         builtRecords = await getRecords();
     });
-
     return results
     }
 
@@ -61,8 +60,8 @@
                 thumb_down
                 </span>
             </button>
-                <span>{`${record.dislikes}`}</span>
             </form>
+            <span>{`${record.dislikes}`}</span>
         </div>
         
     </div>
