@@ -13,5 +13,8 @@
 		"svelte": "^3.54.0",
 		"vite": "^4.3.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"pocketbase": "^0.15.2"
+	}
 }
