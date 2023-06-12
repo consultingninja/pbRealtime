@@ -1,74 +1,76 @@
 <script>
-    import {onMount, onDestroy} from 'svelte';
-    import PocketBase from 'pocketbase';    
+import {onMount,onDestroy} from 'svelte';
+import PocketBase from 'pocketbase';
 
-    const PB = new PocketBase("http://127.0.0.1:8090");
+const PB = new PocketBase('http://127.0.0.1:8090');
 
-    let builtRecords = [];
+let builtRecords = [];
 
-    async function getRecords(){
-        const records = await PB.collection('posts').getFullList(200 /* batch size */, {
-        sort: '-created',
-    });
-    const results = records.map((record)=> {return {title:record.title,contents:record.contents,likes:record.likes,dislikes:record.dislikes,id:record.id}});
+async function getRecords(){
+    const records = await PB.collection('posts').getFullList(200,{sort:'-created',})
 
-    PB.collection('posts').subscribe('*', async (e) => {
-        builtRecords = await getRecords();
-    });
+    const results = records.map((record)=> {return{title:record.title,contents:record.contents,likes:record.likes,dislikes:record.dislikes,id:record.id}});
+
+
     return results
-    }
+}
 
-    onMount(async()=>{
-        builtRecords = await getRecords()
+PB.collection('posts').subscribe('*',async (e)=>{
+    builtRecords = await getRecords();
+})
 
-    });
+onMount(async ()=>{
+    builtRecords = await getRecords();
+})
 
-    onDestroy(() => {
-        PB.collection('posts').unsubscribe('*');
-    })
+onDestroy(()=>{
+    PB.collection('posts'.unsubscribe('*'));
+})
 
 </script>
 
 <h1>Realtime</h1>
 
 <div class="wrapper">
-
     {#each builtRecords?? [] as record}
     <div class="post">
         <div class="post-header">
-            <h3>{`${record.title}`}</h3>
+            <h3> {`${record.title}`}</h3>
         </div>
         <div class="post-content">
-           <p>{`${record.contents}`}</p> 
-        </div>
+            <p>{`${record.contents}`}</p>
+        </div>  
         <div class="post-actions">
             <span>{`${record.likes}`}</span>
             <form method="post" action="?/thumbup">
-                <input type='hidden' name="id" id="id" value={record.id} />
-                <input type='hidden' name="likes" id="likes" value={record.likes} />
+                <input type='hidden' name="id" id='id' value={record.id}/>
+                <input type='hidden' name="likes" id='likes' value={record.likes}/>
                 <button class="btn-thumb">
                     <span class="material-symbols-outlined">
                         thumb_up
                     </span>
                 </button>
+
             </form>
             <form method="post" action="?/thumbdown">
-                <input type='hidden' name="id" id="id" value={record.id} />
-                <input type='hidden' name="dislikes" id="dislikes" value={record.dislikes} />
-            <button class="btn-thumb">
-                <span class="material-symbols-outlined">
-                thumb_down
-                </span>
-            </button>
+                <input type='hidden' name="id" id='id' value={record.id}/>
+                <input type='hidden' name="dislikes" id='dislikes' value={record.dislikes}/>
+                <button class="btn-thumb">
+                    <span class="material-symbols-outlined">
+                        thumb_down
+                    </span>
+                </button>
             </form>
             <span>{`${record.dislikes}`}</span>
-        </div>
-        
+        </div> 
+       
+    
     </div>
-
     {/each}
 
 </div>
+
+
 
 
 <style>
