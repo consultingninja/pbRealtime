@@ -1,4 +1,5 @@
 
+export const ssr = false;
 
 export const actions = {
     thumbup: async ({locals,request})=>{
