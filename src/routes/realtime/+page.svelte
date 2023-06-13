@@ -24,7 +24,7 @@ onMount(async ()=>{
 })
 
 onDestroy(()=>{
-    PB.collection('posts'.unsubscribe('*'));
+    PB.collection('posts').unsubscribe('*');
 })
 
 </script>
